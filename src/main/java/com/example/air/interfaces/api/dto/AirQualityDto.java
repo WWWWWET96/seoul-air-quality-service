@@ -23,12 +23,12 @@ public class AirQualityDto {
                 return this;
             }
             var searchedGuInfo = searchGuAirQualityInfo(gu);
-            guList = Collections.singletonList(searchedGuInfo);
+            this.guList = Collections.singletonList(searchedGuInfo);
             return this;
         }
 
         private GuAirQualityInfo searchGuAirQualityInfo(String gu) {
-            return guList.stream()
+            return this.guList.stream()
                     .filter(guAirQualityInfo -> guAirQualityInfo.getGu().equals(gu))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException(gu + "에 해당하는 자치구가 존재하지 않습니다."));
@@ -39,16 +39,16 @@ public class AirQualityDto {
     public static class GuAirQualityInfo {
         private final String gu;
         private final Integer pm10;
-        private final Integer pm25;
-        private final Double o3;
-        private final Double no2;
-        private final Double co;
-        private final Double so2;
         private final AirQualityGrade pm10Grade;
+        private final Integer pm25;
         private final AirQualityGrade pm25Grade;
+        private final Double o3;
         private final AirQualityGrade o3Grade;
+        private final Double no2;
         private final AirQualityGrade no2Grade;
+        private final Double co;
         private final AirQualityGrade coGrade;
+        private final Double so2;
         private final AirQualityGrade so2Grade;
 
         public GuAirQualityInfo(String gu, Integer pm10, Integer pm25, Double o3, Double no2, Double co, Double so2) {

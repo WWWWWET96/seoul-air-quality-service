@@ -1,6 +1,5 @@
 package com.example.air.application;
 
-import com.example.air.infrastructure.api.seoul.SeoulAirQualityApiCaller;
 import com.example.air.interfaces.api.dto.AirQualityDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,17 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AirQualityService {
-    private final SeoulAirQualityApiCaller seoulAirQualityApiCaller;
+    private final KoreaAirQualityServiceFactory koreaAirQualityServiceFactory;
 
     public AirQualityDto.GetAirQualityInfo getAirQualityInfo(Sido sido, String gu) {
-        if (sido == Sido.seoul) {
-            var airQualityInfo = seoulAirQualityApiCaller.getAirQuality();
-            if (gu != null) {
-                return airQualityInfo.searchByGu(gu);
-            }
-            return airQualityInfo;
+        KoreaAirQualityService service = koreaAirQualityServiceFactory.getService(sido);
+        
+        var airQualityInfo = service.getAirQualityInfo();
+        if (gu != null) {
+            return airQualityInfo.searchByGu(gu);
         }
-
-        throw new RuntimeException(sido + " 대기질 정보는 아직 준비중입니다.");
+        return airQualityInfo;
     }
 }

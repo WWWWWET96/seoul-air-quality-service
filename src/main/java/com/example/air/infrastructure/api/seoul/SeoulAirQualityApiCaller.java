@@ -1,5 +1,6 @@
 package com.example.air.infrastructure.api.seoul;
 
+import com.example.air.application.KoreaAirQualityService;
 import com.example.air.application.Sido;
 import com.example.air.application.util.AirQualityGradeUtil;
 import com.example.air.interfaces.api.dto.AirQualityDto;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class SeoulAirQualityApiCaller {
+public class SeoulAirQualityApiCaller implements KoreaAirQualityService {
     private final SeoulAirQualityApi seoulAirQualityApi;
 
     public SeoulAirQualityApiCaller(@Value("${api.seoul.base-url}") String baseUrl) {
@@ -34,7 +35,13 @@ public class SeoulAirQualityApiCaller {
         this.seoulAirQualityApi = retrofit.create(SeoulAirQualityApi.class);
     }
 
-    public AirQualityDto.GetAirQualityInfo getAirQuality() {
+    @Override
+    public Sido getSido() {
+        return Sido.seoul;
+    }
+
+    @Override
+    public AirQualityDto.GetAirQualityInfo getAirQualityInfo() {
         try {
             String date = getDateAnHourAgo();
             var call = seoulAirQualityApi.getAirQuality(date);
