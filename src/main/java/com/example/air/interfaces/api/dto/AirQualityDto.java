@@ -1,34 +1,39 @@
 package com.example.air.interfaces.api.dto;
 
 import com.example.air.application.AirQualityGrade;
+import com.example.air.application.Sido;
 import com.example.air.application.util.AirQualityGradeUtil;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
 
 public class AirQualityDto {
 
+    @Slf4j
     @Getter
     @Builder
     public static class GetAirQualityInfo {
-        private String sido;
+        private Sido sido;
         private Double sidoPm10Avg;
         private AirQualityGrade sidoPm10AvgGrade;
         private List<GuAirQualityInfo> guList;
+        private Integer totalCount;
 
         public GetAirQualityInfo searchByGu(String gu) {
             if (gu == null) {
                 return this;
             }
             var searchedGuInfo = searchGuAirQualityInfo(gu);
-            this.guList = Collections.singletonList(searchedGuInfo);
+            guList = Collections.singletonList(searchedGuInfo);
+            totalCount = guList.size();
             return this;
         }
 
         private GuAirQualityInfo searchGuAirQualityInfo(String gu) {
-            return this.guList.stream()
+            return guList.stream()
                     .filter(guAirQualityInfo -> guAirQualityInfo.getGu().equals(gu))
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException(gu + "에 해당하는 자치구가 존재하지 않습니다."));

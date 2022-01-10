@@ -1,6 +1,5 @@
 package com.example.air.infrastructure.api.busan;
 
-import com.example.air.application.KoreaAirQualityService;
 import com.example.air.application.Sido;
 import com.example.air.application.util.AirQualityGradeUtil;
 import com.example.air.interfaces.api.dto.AirQualityDto;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class BusanAirQualityApiCaller implements KoreaAirQualityService {
+public class BusanAirQualityApiCaller {
     private final BusanAirQualityApi busanAirQualityApi;
 
     public BusanAirQualityApiCaller(@Value("${api.busan.base-url}") String baseUrl) {
@@ -33,12 +32,6 @@ public class BusanAirQualityApiCaller implements KoreaAirQualityService {
         this.busanAirQualityApi = retrofit.create(BusanAirQualityApi.class);
     }
 
-    @Override
-    public Sido getSido() {
-        return Sido.busan;
-    }
-
-    @Override
     public AirQualityDto.GetAirQualityInfo getAirQualityInfo() {
         try {
             var call = busanAirQualityApi.getAirQuality();
@@ -49,7 +42,6 @@ public class BusanAirQualityApiCaller implements KoreaAirQualityService {
             }
 
             if (response.getResponse().isSuccess()) {
-                log.info(response.toString());
                 return convert(response);
             }
 
@@ -68,7 +60,7 @@ public class BusanAirQualityApiCaller implements KoreaAirQualityService {
         var guList = convert(items);
 
         return AirQualityDto.GetAirQualityInfo.builder()
-                .sido(Sido.seoul.getDescription())
+                .sido(Sido.seoul)
                 .sidoPm10Avg(sidoPm10Avg)
                 .sidoPm10AvgGrade(sidoPm10AvgGrade)
                 .guList(guList)

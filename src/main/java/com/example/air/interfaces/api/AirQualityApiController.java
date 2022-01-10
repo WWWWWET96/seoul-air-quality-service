@@ -16,7 +16,7 @@ public class AirQualityApiController {
 
     @GetMapping("/{sidoCode}")
     public AirQualityDto.GetAirQualityInfo getAirQualityInfo(@PathVariable("sidoCode") Sido sidoCode,
-                                                             @RequestParam(required = false) String gu) {
+                                                             @RequestParam(value = "gu",required = false) String gu) {
         return airQualityService.getAirQualityInfo(sidoCode, gu);
     }
 }

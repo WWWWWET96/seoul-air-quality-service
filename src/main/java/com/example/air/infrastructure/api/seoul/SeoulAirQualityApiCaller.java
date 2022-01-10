@@ -1,6 +1,5 @@
 package com.example.air.infrastructure.api.seoul;
 
-import com.example.air.application.KoreaAirQualityService;
 import com.example.air.application.Sido;
 import com.example.air.application.util.AirQualityGradeUtil;
 import com.example.air.interfaces.api.dto.AirQualityDto;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class SeoulAirQualityApiCaller implements KoreaAirQualityService {
+public class SeoulAirQualityApiCaller {
     private final SeoulAirQualityApi seoulAirQualityApi;
 
     public SeoulAirQualityApiCaller(@Value("${api.seoul.base-url}") String baseUrl) {
@@ -35,12 +34,6 @@ public class SeoulAirQualityApiCaller implements KoreaAirQualityService {
         this.seoulAirQualityApi = retrofit.create(SeoulAirQualityApi.class);
     }
 
-    @Override
-    public Sido getSido() {
-        return Sido.seoul;
-    }
-
-    @Override
     public AirQualityDto.GetAirQualityInfo getAirQualityInfo() {
         try {
             String date = getDateAnHourAgo();
@@ -52,7 +45,7 @@ public class SeoulAirQualityApiCaller implements KoreaAirQualityService {
             }
 
             if (response.getResponse().isSuccess()) {
-                log.info(response.toString());
+                //log.info(response.toString());
                 return convert(response);
             }
 
@@ -75,7 +68,7 @@ public class SeoulAirQualityApiCaller implements KoreaAirQualityService {
         var guList = convert(rows);
 
         return AirQualityDto.GetAirQualityInfo.builder()
-                .sido(Sido.seoul.getDescription())
+                .sido(Sido.seoul)
                 .sidoPm10Avg(sidoPm10Avg)
                 .sidoPm10AvgGrade(sidoPm10AvgGrade)
                 .guList(guList)
@@ -84,7 +77,7 @@ public class SeoulAirQualityApiCaller implements KoreaAirQualityService {
 
     private List<AirQualityDto.GuAirQualityInfo> convert(List<SeoulAirQualityApiDto.Row> rows) {
         return rows.stream()
-                .map(row -> new AirQualityDto.GuAirQualityInfo(
+                .map(row -> new AirQualityDto.GuAirQualityInfo( //map은 요소들을 특정조건에 해당하는 값으로 변환해줌
                         row.getSite(),
                         row.getPm10(),
                         row.getPm25(),
