@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.yaml.snakeyaml.reader.StreamReader;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -42,6 +43,7 @@ public class BusanAirQualityApiCaller {
             }
 
             if (response.getResponse().isSuccess()) {
+                log.info("제대로 성공");
                 return convert(response);
             }
 
@@ -60,10 +62,12 @@ public class BusanAirQualityApiCaller {
         var guList = convert(items);
 
         return AirQualityDto.GetAirQualityInfo.builder()
-                .sido(Sido.seoul)
+                .currentDate(items.stream().findFirst().get().getMeasurementTime())
+                .sido(Sido.busan)
                 .sidoPm10Avg(sidoPm10Avg)
                 .sidoPm10AvgGrade(sidoPm10AvgGrade)
                 .guList(guList)
+                .totalCount(guList.size())
                 .build();
     }
 

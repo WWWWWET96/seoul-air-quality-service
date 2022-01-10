@@ -45,7 +45,7 @@ public class SeoulAirQualityApiCaller {
             }
 
             if (response.getResponse().isSuccess()) {
-                //log.info(response.toString());
+                log.info("제대로 성공");
                 return convert(response);
             }
 
@@ -68,10 +68,12 @@ public class SeoulAirQualityApiCaller {
         var guList = convert(rows);
 
         return AirQualityDto.GetAirQualityInfo.builder()
+                .currentDate(getDateAnHourAgo())
                 .sido(Sido.seoul)
                 .sidoPm10Avg(sidoPm10Avg)
                 .sidoPm10AvgGrade(sidoPm10AvgGrade)
                 .guList(guList)
+                .totalCount(guList.size())
                 .build();
     }
 

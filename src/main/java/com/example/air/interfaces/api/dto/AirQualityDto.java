@@ -16,6 +16,7 @@ public class AirQualityDto {
     @Getter
     @Builder
     public static class GetAirQualityInfo {
+        private String currentDate;
         private Sido sido;
         private Double sidoPm10Avg;
         private AirQualityGrade sidoPm10AvgGrade;
